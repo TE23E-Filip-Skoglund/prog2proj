@@ -2,6 +2,8 @@ package net.skog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import kong.unirest.core.Unirest;
@@ -30,6 +32,7 @@ public class LibraryManager {
             response = Unirest.get(serverUrl + "/books").asString();
             String responseBody = response.getBody();
             List<Book> fetched = gson.fromJson(responseBody, new TypeToken<List<Book>>(){}.getType());
+            books.addAll(fetched);
         } catch (UnirestException e) {
             IO.println("Fel vid uppkoppliung: " + e.getLocalizedMessage());
         }
@@ -42,9 +45,26 @@ public class LibraryManager {
             response = Unirest.get(serverUrl + "/magazines").asString();
             String responseBody = response.getBody();
             List<Magazine> fetched = gson.fromJson(responseBody, new TypeToken<List<Magazine>>(){}.getType());
+            magazines.addAll(fetched);
         } catch (UnirestException e) {
             IO.println("Fel vid uppkoppliung: " + e.getLocalizedMessage());
         }
+    }
+
+
+    // Printa ut böcker ELLER tidningar
+    public void PrintAll5050() {
+        Random rand = new Random();
+        int random = rand.nextInt(2);
+
+        if (random == 1) {
+            IO.println("-- Böcker --");
+            books.forEach(IO::println);
+        } else {
+            IO.println("-- Tidningar --");
+            magazines.forEach(IO::println);
+        }
+
     }
 
     public void addPublication(Publication pub) {
