@@ -23,4 +23,11 @@ public class Magazine extends Publication {
         return publishedYear;
     }
 
+    @Override
+    public String toString() {
+        return "Magazine [issueNumber=" + issueNumber + ", category=" + category + ", publishedYear=" + publishedYear
+                + ", getId()=" + getId() + ", getTitle()=" + getTitle() + ", isAvailable()=" + isAvailable()
+                + ", getIssueNumber()=" + getIssueNumber() + ", getCategory()=" + getCategory()
+                + ", getPublishedYear()=" + getPublishedYear() + "]";
+    }
 }

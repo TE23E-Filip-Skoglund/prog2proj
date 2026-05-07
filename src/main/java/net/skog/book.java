@@ -23,4 +23,9 @@ public class Book extends Publication {
         return pages;
     }
 
+    @Override
+    public String toString() {
+        return "Book [author=" + author + ", genre=" + genre + ", pages=" + pages + ", getId()=" + getId()
+                + ", getTitle()=" + getTitle() + ", isAvailable()=" + isAvailable() + "]";
+    }
 }
