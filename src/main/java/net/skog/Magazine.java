@@ -16,18 +16,18 @@ public class Magazine extends Publication {
     public Integer getIssueNumber() {
         return issueNumber;
     }
+
     public String getCategory() {
         return category;
     }
+
     public Integer getPublishedYear() {
         return publishedYear;
     }
 
     @Override
     public String toString() {
-        return "Magazine [issueNumber=" + issueNumber + ", category=" + category + ", publishedYear=" + publishedYear
-                + ", getId()=" + getId() + ", getTitle()=" + getTitle() + ", isAvailable()=" + isAvailable()
-                + ", getIssueNumber()=" + getIssueNumber() + ", getCategory()=" + getCategory()
-                + ", getPublishedYear()=" + getPublishedYear() + "]";
+        return "Magazine [issueNumber=" + issueNumber + ", title=" + getTitle() + ", category=" + category
+                + ", publishedYear=" + publishedYear + ", id=" + getId() + ", availability=" + isAvailable() + "]";
     }
 }
