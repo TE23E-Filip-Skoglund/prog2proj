@@ -28,6 +28,8 @@ public class Main {
                 case "1" -> manager.fetchBooks();
                 case "2" -> manager.fetchMagazines();
                 case "3" -> manager.PrintAll5050();
+                case "4" -> manager.addBook();
+                case "5" -> manager.addMagazine();
                 case "6" -> {
                     IO.println("Avslutar programmet....");
                     System.exit(0);
