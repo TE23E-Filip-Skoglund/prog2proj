@@ -31,7 +31,8 @@ public class LibraryManager {
         try {
             response = Unirest.get(serverUrl + "/books").asString();
             String responseBody = response.getBody();
-            List<Book> fetched = gson.fromJson(responseBody, new TypeToken<List<Book>>(){}.getType());
+            List<Book> fetched = gson.fromJson(responseBody, new TypeToken<List<Book>>() {
+            }.getType());
             books.addAll(fetched);
         } catch (UnirestException e) {
             IO.println("Fel vid uppkoppliung: " + e.getLocalizedMessage());
@@ -44,13 +45,13 @@ public class LibraryManager {
         try {
             response = Unirest.get(serverUrl + "/magazines").asString();
             String responseBody = response.getBody();
-            List<Magazine> fetched = gson.fromJson(responseBody, new TypeToken<List<Magazine>>(){}.getType());
+            List<Magazine> fetched = gson.fromJson(responseBody, new TypeToken<List<Magazine>>() {
+            }.getType());
             magazines.addAll(fetched);
         } catch (UnirestException e) {
             IO.println("Fel vid uppkoppliung: " + e.getLocalizedMessage());
         }
     }
-
 
     // Printa ut böcker ELLER tidningar
     public void PrintAll5050() {
@@ -67,7 +68,60 @@ public class LibraryManager {
 
     }
 
-    public void addPublication(Publication pub) {
+    // Lägg till bok
+    public void addBook() {
+
+        IO.println("---- Lägg till ny bok ----");
+        while (true) {
+            IO.print("Ange författare: ");
+            String author = IO.readln();
+            IO.print("Ange titel: ");
+            String title = IO.readln();
+            IO.print("Ange genre: ");
+            String genre = IO.readln();
+            IO.print("Ange antal sidor: ");
+            Integer pages;
+            try {
+            pages = Integer.parseInt(IO.readln());
+            } catch (NumberFormatException e) {
+                IO.println("Felaktigt format på sidantal. Vänligen ange ett giltigt heltal. \nFörsök igen");
+                continue;
+            }
+            
+            String id = "book" + (books.size() + 1);
+            Book book = new Book(id, title, false, author, genre, pages);
+            books.add(book);
+            IO.println("---------------\nBok tillagd framgångsrikt: " + book);
+            break;
+        }
+
+    }
+
+    // Lägg till tidningar
+    public void addMagazine() {
+        IO.println("---- Lägg till ny tidning ----");
+        while (true) {
+            IO.print("Ange nummer: ");
+            Integer issueNum = Integer.parseInt(IO.readln());
+            IO.print("Ange titel: ");
+            String title = IO.readln();
+            IO.print("Ange kategori: ");
+            String category = IO.readln();
+            IO.print("Ange publiceringsår: ");
+            Integer publishedYear;
+            try {
+            publishedYear = Integer.parseInt(IO.readln());
+            } catch (NumberFormatException e) {
+                IO.println("Felaktigt format på publiseringsår. Vänligen ange ett giltigt årtal. \nFörsök igen");
+                continue;
+            }
+            String id = "magazine" + (magazines.size() + 1);
+            Magazine magazine = new Magazine(id, title, false, issueNum, category, publishedYear);
+            magazines.add(magazine);
+
+            IO.println("---------------\nTidning tillagd framgångsrikt: " + magazine);
+            break;
+        }
     }
 
 }
