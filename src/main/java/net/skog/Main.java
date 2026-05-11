@@ -2,14 +2,11 @@
 // Denna är main klassen. Den innehåller en meny där användaren kan välja att göra diversee saker.
 package net.skog;
 
-import java.util.Scanner;
-
 public class Main {
 
     public static void main(String[] args) {
 
         LibraryManager manager = new LibraryManager("http://10.151.168.5:3135"); // http://localhost:3000
-        Scanner sc = new Scanner(System.in);
 
         while (true) {
 
