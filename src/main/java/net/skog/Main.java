@@ -1,14 +1,14 @@
+// Filip Skoglund TE23E
+// Denna är main klassen. Den innehåller en meny där användaren kan välja att göra diversee saker.
 package net.skog;
 
 import java.util.Scanner;
-
-import kong.unirest.core.Unirest;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        LibraryManager manager = new LibraryManager("http://localhost:3000");
+        LibraryManager manager = new LibraryManager("http://10.151.168.5:3135"); // http://localhost:3000
         Scanner sc = new Scanner(System.in);
 
         while (true) {
@@ -33,7 +33,7 @@ public class Main {
                 case "6" -> {
                     IO.println("Avslutar programmet....");
                     System.exit(0);
-                    }
+                }
                 default -> IO.println("Felaktigt val, vg försök igen");
             }
 

@@ -1,3 +1,6 @@
+// Filip Skoglund TE23E
+// Denna är klassen för publikationer. Den innehåller relevatana variabler samt funktioner för att hantera publikationer, och på så vis samla magasin och böcker i en gemensam klass som de båda ärver ifrån.
+
 package net.skog;
 
 public abstract class Publication {

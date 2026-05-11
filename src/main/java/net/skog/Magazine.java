@@ -1,3 +1,6 @@
+// Filip Skoglund TE23E
+// Denna är klassen för magasin. Den är snarlik bok, men innehåller relevatana variabler samt funktioner för att hantera magasin (ist för böcker) i biblioteket.
+
 package net.skog;
 
 public class Magazine extends Publication {

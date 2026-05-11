@@ -1,3 +1,6 @@
+// Filip Skoglund TE23E
+// Denna är klassen innehåller mestadels av all hantering kring biblioteket och dess funktioner.
+
 package net.skog;
 
 import java.util.ArrayList;
@@ -73,6 +76,7 @@ public class LibraryManager {
 
         IO.println("---- Lägg till ny bok ----");
         while (true) {
+            // Hantera inmatningar + förhindra att programmet crashar då användaren matar in ex: bokstav när de är siffra
             IO.print("Ange författare: ");
             String author = IO.readln();
             IO.print("Ange titel: ");
@@ -82,14 +86,21 @@ public class LibraryManager {
             IO.print("Ange antal sidor: ");
             Integer pages;
             try {
-            pages = Integer.parseInt(IO.readln());
+                pages = Integer.parseInt(IO.readln());
             } catch (NumberFormatException e) {
-                IO.println("Felaktigt format på sidantal. Vänligen ange ett giltigt heltal. \nFörsök igen");
+                IO.println("Felaktigt format på sidantal. Vänligen ange ett giltigt heltal. \nFörsök igen:");
                 continue;
             }
-            
+
+            // Kolla så alla variabler är giltiga och ifylda
+            if (author.isBlank() || title.isBlank() || genre.isBlank() || pages <= 0) {
+                IO.println("Felaktigt format. Vänligen se till att alla fält är ifyllda. \nFörsök igen:");
+                continue;
+            }
+            // Skapa nästa id baserat på storleken av listan
             String id = "book" + (books.size() + 1);
-            Book book = new Book(id, title, false, author, genre, pages);
+            // Skapa en ny book baserad på användarens inmatningar + lägg till den i listan
+            Book book = new Book(id, title, true, author, genre, pages);
             books.add(book);
             IO.println("---------------\nBok tillagd framgångsrikt: " + book);
             break;
@@ -101,8 +112,15 @@ public class LibraryManager {
     public void addMagazine() {
         IO.println("---- Lägg till ny tidning ----");
         while (true) {
+            // Hantera inmatningar + förhindra att programmet crashar då användaren matar in ex: bokstav när de är siffra
             IO.print("Ange nummer: ");
-            Integer issueNum = Integer.parseInt(IO.readln());
+            Integer issueNum;
+            try {
+                issueNum = Integer.parseInt(IO.readln());
+            } catch (NumberFormatException e) {
+                IO.println("Felaktigt format på nummer. Vänligen ange ett giltigt heltal. \nFörsök igen:");
+                continue;
+            }
             IO.print("Ange titel: ");
             String title = IO.readln();
             IO.print("Ange kategori: ");
@@ -110,13 +128,22 @@ public class LibraryManager {
             IO.print("Ange publiceringsår: ");
             Integer publishedYear;
             try {
-            publishedYear = Integer.parseInt(IO.readln());
+                publishedYear = Integer.parseInt(IO.readln());
             } catch (NumberFormatException e) {
-                IO.println("Felaktigt format på publiseringsår. Vänligen ange ett giltigt årtal. \nFörsök igen");
+                IO.println("Felaktigt format på publiseringsår. Vänligen ange ett giltigt årtal. \nFörsök igen:");
                 continue;
             }
+
+            // Kolla så alla variabler är giltiga och ifylda
+            if (issueNum <= 0 || title.isBlank() || category.isBlank() || publishedYear <= 0) {
+                IO.println("Felaktigt format. Vänligen se till att alla fält är ifyllda. \nFörsök igen:");
+                continue;
+            }
+
+            // Skapa ett nytt magasin, id baseras på antalet befinliga +1, magasinet är
+            // baserat på användarens inmatningar
             String id = "magazine" + (magazines.size() + 1);
-            Magazine magazine = new Magazine(id, title, false, issueNum, category, publishedYear);
+            Magazine magazine = new Magazine(id, title, true, issueNum, category, publishedYear);
             magazines.add(magazine);
 
             IO.println("---------------\nTidning tillagd framgångsrikt: " + magazine);

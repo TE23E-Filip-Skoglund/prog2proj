@@ -1,3 +1,6 @@
+// Filip Skoglund TE23E
+// Denna är klassen för böcker. Den innehåller relevatana variabler samt funktioner för att hantera böcker i biblioteket.
+
 package net.skog;
 
 public class Book extends Publication {
