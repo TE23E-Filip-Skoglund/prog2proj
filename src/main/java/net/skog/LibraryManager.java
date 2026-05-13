@@ -14,12 +14,13 @@ import kong.unirest.core.HttpResponse;
 import kong.unirest.core.UnirestException;
 
 public class LibraryManager {
+
+    // TODO: Depricate book + magazines och istället använd en samlad lista av publications.
     private List<Book> books = new ArrayList<>();
     private List<Magazine> magazines = new ArrayList<>();
-
-    // private List<Publication> publications; FÖR SENARE NIVÅREERERE
-    // private List<User> users; FÖR SENARE NIVÅREERERE
-    // private List<SuependedUser> suspendedUser; FÖR SENARE NIVÅPER
+    private List<Publication> publications = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
+    private List<SuspendedUser> suspendedUsers = new ArrayList<>();
     Gson gson = new Gson();
 
     private String serverUrl;
@@ -28,7 +29,13 @@ public class LibraryManager {
         this.serverUrl = serverUrl;
     }
 
-    // Hämta och lagra böcker från servern
+    public void syncWithServer() {
+        fetchBooks();
+        fetchMagazines();
+        fetchUsers();
+    }
+
+    // Hämta böcker från servern
     public void fetchBooks() {
         HttpResponse<String> response;
         try {
@@ -42,7 +49,7 @@ public class LibraryManager {
         }
     }
 
-    // Hämta och lagra böcker från servern
+    // Hämta tidningar från servern
     public void fetchMagazines() {
         HttpResponse<String> response;
         try {
@@ -51,6 +58,32 @@ public class LibraryManager {
             List<Magazine> fetched = gson.fromJson(responseBody, new TypeToken<List<Magazine>>() {
             }.getType());
             magazines.addAll(fetched);
+        } catch (UnirestException e) {
+            IO.println("Fel vid uppkoppliung: " + e.getLocalizedMessage());
+        }
+    }
+
+    // Hämta users & suspendedUsers från servern
+    public void fetchUsers() {
+        // Users
+        HttpResponse<String> response;
+        try {
+            response = Unirest.get(serverUrl + "/users").asString();
+            String responseBody = response.getBody();
+            List<User> fetched = gson.fromJson(responseBody, new TypeToken<List<User>>() {
+            }.getType());
+            users.addAll(fetched);
+        } catch (UnirestException e) {
+            IO.println("Fel vid uppkoppliung: " + e.getLocalizedMessage());
+        }
+
+        // Suspendedusers
+        try {
+            response = Unirest.get(serverUrl + "/suspended").asString();
+            String responseBody = response.getBody();
+            List<SuspendedUser> fetched = gson.fromJson(responseBody, new TypeToken<List<SuspendedUser>>() {
+            }.getType());
+            suspendedUsers.addAll(fetched);
         } catch (UnirestException e) {
             IO.println("Fel vid uppkoppliung: " + e.getLocalizedMessage());
         }
@@ -71,12 +104,19 @@ public class LibraryManager {
 
     }
 
+    // printa ut användare (för test)
+    public void PrintUsers() {
+        IO.println("-- Användare --");
+        users.forEach(IO::println);
+    }
+
     // Lägg till bok
     public void addBook() {
 
         IO.println("---- Lägg till ny bok ----");
         while (true) {
-            // Hantera inmatningar + förhindra att programmet crashar då användaren matar in ex: bokstav när de är siffra
+            // Hantera inmatningar + förhindra att programmet crashar då användaren matar in
+            // ex: bokstav när de är siffra
             IO.print("Ange författare: ");
             String author = IO.readln();
             IO.print("Ange titel: ");
@@ -98,7 +138,7 @@ public class LibraryManager {
                 continue;
             }
             // Skapa nästa id baserat på storleken av listan
-            String id = "book" + (books.size() + 1);
+            String id = String.valueOf(books.size() + 1);
             // Skapa en ny book baserad på användarens inmatningar + lägg till den i listan
             Book book = new Book(id, title, true, author, genre, pages);
             books.add(book);
@@ -112,7 +152,8 @@ public class LibraryManager {
     public void addMagazine() {
         IO.println("---- Lägg till ny tidning ----");
         while (true) {
-            // Hantera inmatningar + förhindra att programmet crashar då användaren matar in ex: bokstav när de är siffra
+            // Hantera inmatningar + förhindra att programmet crashar då användaren matar in
+            // ex: bokstav när de är siffra
             IO.print("Ange nummer: ");
             Integer issueNum;
             try {
@@ -142,7 +183,7 @@ public class LibraryManager {
 
             // Skapa ett nytt magasin, id baseras på antalet befinliga +1, magasinet är
             // baserat på användarens inmatningar
-            String id = "magazine" + (magazines.size() + 1);
+            String id = String.valueOf(magazines.size() + 1);
             Magazine magazine = new Magazine(id, title, true, issueNum, category, publishedYear);
             magazines.add(magazine);
 
