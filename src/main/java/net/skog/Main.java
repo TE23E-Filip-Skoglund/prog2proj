@@ -31,7 +31,7 @@ public class Main {
 
             switch (IO.readln()) {
                 case "1" -> manager.syncWithServer();
-                case "2" -> manager.fetchMagazines();
+                case "2" -> IO.println("DEPRICATED");
                 case "3" -> manager.PrintAll5050();
                 case "4" -> manager.addBook();
                 case "5" -> manager.PrintUsers();

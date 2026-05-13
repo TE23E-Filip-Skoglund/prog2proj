@@ -9,15 +9,13 @@ import java.util.Random;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import kong.unirest.core.Unirest;
+
 import kong.unirest.core.HttpResponse;
+import kong.unirest.core.Unirest;
 import kong.unirest.core.UnirestException;
 
 public class LibraryManager {
 
-    // TODO: Depricate book + magazines och istället använd en samlad lista av publications.
-    private List<Book> books = new ArrayList<>();
-    private List<Magazine> magazines = new ArrayList<>();
     private List<Publication> publications = new ArrayList<>();
     private List<User> users = new ArrayList<>();
     private List<SuspendedUser> suspendedUsers = new ArrayList<>();
@@ -30,34 +28,28 @@ public class LibraryManager {
     }
 
     public void syncWithServer() {
-        fetchBooks();
-        fetchMagazines();
+        fetchPublications();
         fetchUsers();
     }
 
-    // Hämta böcker från servern
-    public void fetchBooks() {
-        HttpResponse<String> response;
+    // Hämta publikationer från servern
+    public void fetchPublications() {
         try {
-            response = Unirest.get(serverUrl + "/books").asString();
+            HttpResponse<String> response = Unirest.get(serverUrl + "/books").asString();
             String responseBody = response.getBody();
             List<Book> fetched = gson.fromJson(responseBody, new TypeToken<List<Book>>() {
             }.getType());
-            books.addAll(fetched);
+            publications.addAll(fetched);
         } catch (UnirestException e) {
             IO.println("Fel vid uppkoppliung: " + e.getLocalizedMessage());
         }
-    }
 
-    // Hämta tidningar från servern
-    public void fetchMagazines() {
-        HttpResponse<String> response;
         try {
-            response = Unirest.get(serverUrl + "/magazines").asString();
+            HttpResponse<String> response = Unirest.get(serverUrl + "/magazines").asString();
             String responseBody = response.getBody();
             List<Magazine> fetched = gson.fromJson(responseBody, new TypeToken<List<Magazine>>() {
             }.getType());
-            magazines.addAll(fetched);
+            publications.addAll(fetched);
         } catch (UnirestException e) {
             IO.println("Fel vid uppkoppliung: " + e.getLocalizedMessage());
         }
@@ -96,10 +88,14 @@ public class LibraryManager {
 
         if (random == 1) {
             IO.println("-- Böcker --");
-            books.forEach(IO::println);
+            publications.stream()
+                    .filter(p -> p instanceof Book)
+                    .forEach(IO::println);
         } else {
             IO.println("-- Tidningar --");
-            magazines.forEach(IO::println);
+            publications.stream()
+                    .filter(p -> p instanceof Magazine)
+                    .forEach(IO::println);
         }
 
     }
@@ -138,10 +134,10 @@ public class LibraryManager {
                 continue;
             }
             // Skapa nästa id baserat på storleken av listan
-            String id = String.valueOf(books.size() + 1);
+            String id = String.valueOf(publications.size() + 1);
             // Skapa en ny book baserad på användarens inmatningar + lägg till den i listan
             Book book = new Book(id, title, true, author, genre, pages);
-            books.add(book);
+            publications.add(book);
             IO.println("---------------\nBok tillagd framgångsrikt: " + book);
             break;
         }
@@ -183,9 +179,9 @@ public class LibraryManager {
 
             // Skapa ett nytt magasin, id baseras på antalet befinliga +1, magasinet är
             // baserat på användarens inmatningar
-            String id = String.valueOf(magazines.size() + 1);
+            String id = String.valueOf(publications.size() + 1);
             Magazine magazine = new Magazine(id, title, true, issueNum, category, publishedYear);
-            magazines.add(magazine);
+            publications.add(magazine);
 
             IO.println("---------------\nTidning tillagd framgångsrikt: " + magazine);
             break;
